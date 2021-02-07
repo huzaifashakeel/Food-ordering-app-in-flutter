@@ -22,8 +22,13 @@ environment:
 
 dependencies:
   curved_navigation_bar: ^0.3.7
-  carousel_slider: ^2.3.1
   carousel_pro: ^1.0.0
+  cloud_firestore: ^0.16.0
+  firebase_auth: ^0.20.0+1
+  firebase_core: ^0.7.0
+  provider: ^4.3.3
+  transparent_image: ^1.0.0
+  flutter_spinkit: ^4.1.2+1
   flutter:
     sdk: flutter
 

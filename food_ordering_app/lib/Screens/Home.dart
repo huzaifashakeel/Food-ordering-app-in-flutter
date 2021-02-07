@@ -1,10 +1,16 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:food_ordering_app/Helpers/screen_navigation.dart';
+import 'package:food_ordering_app/Screens/loginScreen.dart';
+import 'package:food_ordering_app/Screens/shoppingBag.dart';
+import 'package:food_ordering_app/providers/rastaurant.dart';
+import 'package:food_ordering_app/providers/user.dart';
 import 'package:food_ordering_app/widgets/BottomNavBar.dart';
 import 'package:food_ordering_app/widgets/catagories.dart';
-import 'package:food_ordering_app/widgets/custom_Text.dart';
+import 'package:food_ordering_app/widgets/custom_widgets.dart';
 import 'package:food_ordering_app/widgets/featured_products.dart';
+import 'package:food_ordering_app/widgets/rastaurants.dart';
 import 'package:food_ordering_app/widgets/smallButton.dart';
+import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
   int active = 2;
@@ -22,67 +28,175 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<UserProvider>(context);
+    final rastaurantProvider = Provider.of<RastaurantProvider>(context);
+
     return Scaffold(
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            UserAccountsDrawerHeader(
+              // currentAccountPicture: Image.asset(
+              //   'images/1.jpg',
+              // ),
+              accountEmail: CustomText(
+                text: user.userModel.email,
+                color: Colors.white,
+                size: 16,
+              ),
+              accountName: CustomText(
+                  text: user.userModel.name, color: Colors.white, size: 20),
+            ),
+            ListTile(
+              title: Text(
+                "Home",
+                style: TextStyle(fontSize: 20),
+              ),
+              leading: Icon(
+                Icons.home,
+                size: 35,
+              ),
+              onTap: () => {},
+            ),
+            ListTile(
+              title: Text(
+                "Food I like",
+                style: TextStyle(fontSize: 20),
+              ),
+              leading: Icon(
+                Icons.food_bank_outlined,
+                size: 35,
+              ),
+              onTap: () => {},
+            ),
+            ListTile(
+              title: Text(
+                "Cart",
+                style: TextStyle(fontSize: 20),
+              ),
+              leading: Icon(
+                Icons.shopping_cart,
+                size: 35,
+              ),
+              onTap: () => {
+                Navigator.pop(context),
+                ChangeScreen(context, ShoppingBag())
+              },
+            ),
+            ListTile(
+              title: Text(
+                "My orders",
+                style: TextStyle(fontSize: 20),
+              ),
+              leading: Icon(
+                Icons.bookmark_border,
+                size: 35,
+              ),
+              onTap: () => {},
+            ),
+            ListTile(
+              title: Text(
+                "Settings",
+                style: TextStyle(fontSize: 20),
+              ),
+              leading: Icon(
+                Icons.settings,
+                size: 35,
+              ),
+              onTap: () => {},
+            ),
+            ListTile(
+              onTap: () {
+                user.SignOut();
+                ChangeScreenReplacement(context, LoginScreen());
+              },
+              leading: Icon(
+                Icons.exit_to_app,
+                size: 35,
+              ),
+              title: Text(
+                "Logout",
+                style: TextStyle(fontSize: 20),
+              ),
+            ),
+          ],
+        ),
+      ),
+      appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.white),
+        backgroundColor: Colors.red,
+        elevation: 0,
+        title: CustomText(
+          text: "Food App",
+          fontWeight: FontWeight.bold,
+          size: 24,
+          color: Colors.white,
+        ),
+        actions: [
+          Stack(
+            children: [
+              IconButton(
+                icon: Icon(Icons.shopping_cart_rounded),
+                onPressed: () {},
+              ),
+            ],
+          ),
+          Stack(
+            children: [
+              IconButton(
+                icon: Icon(Icons.notifications_none),
+                onPressed: () {},
+              ),
+              Positioned(
+                top: 12,
+                right: 12,
+                child: Container(
+                  height: 10,
+                  width: 10,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+              )
+            ],
+          )
+        ],
+      ),
       bottomNavigationBar: BottomNavBar(active: 2),
       backgroundColor: Colors.white,
       body: SafeArea(
         child: ListView(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: CustomText(
-                    text: "What would you like to eat ?",
-                    size: 18,
-                  ),
-                ),
-                Stack(
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.notifications_none),
-                      onPressed: () {},
-                    ),
-                    Positioned(
-                      top: 12,
-                      right: 12,
-                      child: Container(
-                        height: 10,
-                        width: 10,
-                        decoration: BoxDecoration(
-                          color: Colors.red,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                      ),
-                    )
-                  ],
-                )
-              ],
-            ),
-            SizedBox(
-              height: 8,
-            ),
             Container(
-              decoration: BoxDecoration(color: Colors.white, boxShadow: [
-                BoxShadow(
-                    color: Colors.grey[300],
-                    offset: Offset(1, 1),
-                    blurRadius: 4)
-              ]),
-              child: ListTile(
-                leading: Icon(
-                  Icons.search,
-                  color: Colors.red,
-                ),
-                trailing: Icon(
-                  Icons.filter_list,
-                  color: Colors.red,
-                ),
-                title: TextField(
-                  decoration: InputDecoration(
-                      hintText: "Find foods and Restaurants",
-                      border: InputBorder.none),
+              decoration: BoxDecoration(
+                color: Colors.red,
+                borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(10),
+                    bottomRight: Radius.circular(10)),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(8, 8, 8, 20),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: Colors.white,
+                  ),
+                  child: ListTile(
+                    leading: Icon(
+                      Icons.search,
+                      color: Colors.red,
+                    ),
+                    trailing: Icon(
+                      Icons.filter_list,
+                      color: Colors.red,
+                    ),
+                    title: TextField(
+                      decoration: InputDecoration(
+                          hintText: "Find foods and Restaurants",
+                          border: InputBorder.none),
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -90,135 +204,55 @@ class _HomeState extends State<Home> {
               height: 20,
             ),
             Catagories(),
+            // Divider(),
             SizedBox(height: 10),
             Padding(
               padding: EdgeInsets.all(10),
               child: CustomText(
                 text: 'Featured',
-                size: 20,
+                size: 24,
+                fontWeight: FontWeight.bold,
               ),
             ),
             Featured(),
+            SizedBox(
+              height: 10,
+            ),
+            //Rastaurantwidget(),
+//             Container(
+//               height: 100,
+//               child: ListView.builder(
+//                   scrollDirection: Axis.horizontal,
+//                   itemCount: 6,
+//                   itemBuilder: (context, index) {
+//                     return GestureDetector(
+//                       onTap: () async {
+// //
+//                       },
+//                       //  child: CategoryWidget(
+//                       //   category: categoryProvider.categories[index],
+//                       //  ),
+//                     );
+//                   }),
+//             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: CustomText(
-                text: 'Popular',
+                text: 'Popular Rastaurants',
+                size: 26,
+                fontWeight: FontWeight.bold,
               ),
             ),
-            Stack(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
-                      child: Image.asset('images/4.jpg')),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(12, 16, 12, 8),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SmallButton(
-                        icon: Icons.favorite,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          width: 50,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: Row(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.all(2),
-                                child: Icon(
-                                  Icons.star,
-                                  color: Colors.yellow[900],
-                                  size: 20,
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(right: 1),
-                                child: Text('4.5'),
-                              ),
-                            ],
-                          ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: rastaurantProvider.rastaurants
+                  .map((item) => GestureDetector(
+                        onTap: () {},
+                        child: Rastaurantwidget(
+                          rastaurant: item,
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-                Positioned.fill(
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        height: 100,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(20),
-                                bottomRight: Radius.circular(20)),
-                            gradient: LinearGradient(
-                                begin: Alignment.bottomCenter,
-                                end: Alignment.topCenter,
-                                colors: [
-                                  Colors.black.withOpacity(0.8),
-                                  Colors.black.withOpacity(0.7),
-                                  Colors.black.withOpacity(0.6),
-                                  Colors.black.withOpacity(0.5),
-                                  Colors.black.withOpacity(0.4),
-                                  Colors.black.withOpacity(0.1),
-                                  Colors.black.withOpacity(0.05),
-                                  Colors.black.withOpacity(0.025),
-                                ])),
-                      ),
-                    ),
-                  ),
-                ),
-                Positioned.fill(
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(18, 8, 8, 16),
-                          child: RichText(
-                            text: TextSpan(children: [
-                              TextSpan(
-                                text: "Burgers\n",
-                                style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.bold),
-                              ),
-                              TextSpan(
-                                text: "by : ",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                ),
-                              ),
-                              TextSpan(
-                                text: "Pizza hut",
-                                style: TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.bold),
-                              ),
-                            ]),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(8, 8, 20, 8),
-                          child: Text(
-                            "\$12.99\n",
-                            style: TextStyle(color: Colors.white, fontSize: 18),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                )
-              ],
+                      ))
+                  .toList(),
             )
           ],
         ),

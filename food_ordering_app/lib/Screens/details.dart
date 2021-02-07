@@ -1,12 +1,14 @@
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
 import 'package:food_ordering_app/Models/Products.dart';
-import 'package:food_ordering_app/widgets/custom_Text.dart';
+import 'package:food_ordering_app/widgets/Loading.dart';
+import 'package:food_ordering_app/widgets/custom_widgets.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 class Details extends StatefulWidget {
-  final Products products;
+  final ProductModel product;
 
-  Details({@required this.products});
+  Details({@required this.product});
 
   @override
   _DetailsState createState() => _DetailsState();
@@ -26,9 +28,27 @@ class _DetailsState extends State<Details> {
                 children: [
                   Carousel(
                     images: [
-                      AssetImage('images/${widget.products.image}'),
-                      AssetImage('images/${widget.products.image}'),
-                      AssetImage('images/${widget.products.image}'),
+                      Stack(
+                        children: [
+                          Positioned.fill(
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: Loading(),
+                            ),
+                          ),
+                          Center(
+                            child: FadeInImage.memoryNetwork(
+                              placeholder: kTransparentImage,
+                              image: widget.product.image,
+                            ),
+                          )
+                          // Image.network(
+                          //   catagoryProvider.catagories[index].image,
+                          //   width: 150,
+                          //   height: 100,
+                          // ),
+                        ],
+                      ),
                     ],
                     dotBgColor: Colors.white,
                     dotColor: Colors.grey,
@@ -142,18 +162,38 @@ class _DetailsState extends State<Details> {
             //   ],
             // ),
             CustomText(
-              text: widget.products.name,
+              text: widget.product.name,
               size: 24,
               fontWeight: FontWeight.w600,
             ),
             CustomText(
-              text: "\$" + widget.products.price.toString(),
+              text: "\$" + widget.product.price.toString(),
               size: 18,
               fontWeight: FontWeight.w500,
               color: Colors.red,
             ),
             SizedBox(
               height: 10,
+            ),
+
+            CustomText(
+              text: "Discription",
+              size: 22,
+            ),
+            Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: RichText(
+                    textAlign: TextAlign.justify,
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                            text: widget.product.discription,
+                            style: TextStyle(color: Colors.black, fontSize: 18))
+                      ],
+                    ))),
+
+            SizedBox(
+              height: 30,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
