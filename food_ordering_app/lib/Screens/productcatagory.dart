@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:food_ordering_app/Helpers/screen_navigation.dart';
 import 'package:food_ordering_app/Models/catagoryModel.dart';
 import 'package:food_ordering_app/providers/product.dart';
 import 'package:food_ordering_app/widgets/Loading.dart';
 import 'package:food_ordering_app/widgets/custom_widgets.dart';
+import 'package:food_ordering_app/widgets/productwidget.dart';
 import 'package:provider/provider.dart';
 import 'package:transparent_image/transparent_image.dart';
 
@@ -36,13 +38,13 @@ class CategoryScreen extends StatelessWidget {
                 child: FadeInImage.memoryNetwork(
                   placeholder: kTransparentImage,
                   image: categoryModel.image,
-                  height: 160,
+                  height: 200,
                   fit: BoxFit.fill,
                   width: double.infinity,
                 ),
               ),
               Container(
-                height: 160,
+                height: 200,
                 decoration: BoxDecoration(
 //                    borderRadius: BorderRadius.only(
 //                      bottomLeft: Radius.circular(30),
@@ -98,18 +100,23 @@ class CategoryScreen extends StatelessWidget {
           SizedBox(
             height: 10,
           ),
-          // Column(
-          //   children: productProvider.productsByCategory
-          //       .map((item) => GestureDetector(
-          //     onTap: () {
-          //       changeScreen(context, Details(product: item,));
-          //     },
-          //     child: ProductWidget(
-          //       product: item,
-          //     ),
-          //   ))
-          //       .toList(),
-          // )
+          Column(
+            children: productProvider.productsByCategory
+                .map((item) => GestureDetector(
+                      onTap: () {
+                        ChangeScreen(
+                            context,
+                            Details(
+                              product: item,
+                            ));
+                      },
+                      child: ProductWidget(product: item),
+                      //ProductWidget(
+                      //product: item,
+                      //),
+                    ))
+                .toList(),
+          )
         ],
       )),
     );

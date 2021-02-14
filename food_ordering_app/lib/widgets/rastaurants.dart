@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:food_ordering_app/Helpers/screen_navigation.dart';
 import 'package:food_ordering_app/Models/rastaurant.dart';
 import 'package:food_ordering_app/Screens/rastaurant.dart';
+import 'package:food_ordering_app/providers/app.dart';
+import 'package:food_ordering_app/providers/product.dart';
 import 'package:food_ordering_app/widgets/Loading.dart';
 import 'package:food_ordering_app/widgets/smallButton.dart';
+import 'package:provider/provider.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 class Rastaurantwidget extends StatelessWidget {
@@ -13,6 +16,8 @@ class Rastaurantwidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final productprovider = Provider.of<ProductProvider>(context);
+    // final appProvider = Provider.of<AppProvider>(context);
     //print("rastaurant model : " + rastaurant.toString());
     return Container(
         height: 250,
@@ -31,7 +36,9 @@ class Rastaurantwidget extends StatelessWidget {
                       ),
                     ),
                     GestureDetector(
-                      onTap: () {
+                      onTap: () async {
+                        //  appProvider.changeloading();
+
                         ChangeScreen(context,
                             RestaurantScreen(restaurantModel: rastaurant));
                       },

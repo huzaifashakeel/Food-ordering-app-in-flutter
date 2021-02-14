@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:food_ordering_app/Helpers/screen_navigation.dart';
 import 'package:food_ordering_app/Screens/productcatagory.dart';
+import 'package:food_ordering_app/providers/app.dart';
 import 'package:food_ordering_app/providers/catagory.dart';
+import 'package:food_ordering_app/providers/product.dart';
 import 'package:food_ordering_app/widgets/Loading.dart';
 import 'package:food_ordering_app/widgets/custom_widgets.dart';
 import 'package:provider/provider.dart';
@@ -11,6 +13,8 @@ class Catagories extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final catagoryProvider = Provider.of<CatagoryProvider>(context);
+    final productprovider = Provider.of<ProductProvider>(context);
+    //final appProvider = Provider.of<AppProvider>(context);
     return Container(
         height: 100,
         //width: 100,
@@ -48,43 +52,47 @@ class Catagories extends StatelessWidget {
                   ),
                   Positioned.fill(
                     child: GestureDetector(
-                      onTap: () {
+                      onTap: () async {
+                        //  appProvider.changeloading();
+                        await productprovider.loadProductsByCategory(
+                            categoryName:
+                                catagoryProvider.catagories[index].name);
+                        // appProvider.changeloading();
                         ChangeScreen(
                             context,
                             CategoryScreen(
                               categoryModel: catagoryProvider.catagories[index],
                             ));
                       },
-
-                        child: Container(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(30),
-                              //color: Colors.white,
-                              gradient: LinearGradient(
-                                  begin: Alignment.bottomCenter,
-                                  end: Alignment.topCenter,
-                                  colors: [
-                                    // Colors.black.withOpacity(0.8),
-                                    // Colors.black.withOpacity(0.7),
-                                    Colors.black.withOpacity(0.6),
-                                    Colors.black.withOpacity(0.5),
-                                    Colors.black.withOpacity(0.4),
-                                    Colors.black.withOpacity(0.1),
-                                    // Colors.black.withOpacity(0.05),
-                                    // Colors.black.withOpacity(0.025),
-                                  ])),
-                          child: Center(
-                            child: CustomText(
-                              text: catagoryProvider.catagories[index].name,
-                              color: Colors.white,
-                              size: 24,
-                              fontWeight: FontWeight.bold,
-                            ),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30),
+                            //color: Colors.white,
+                            gradient: LinearGradient(
+                                begin: Alignment.bottomCenter,
+                                end: Alignment.topCenter,
+                                colors: [
+                                  // Colors.black.withOpacity(0.8),
+                                  // Colors.black.withOpacity(0.7),
+                                  Colors.black.withOpacity(0.6),
+                                  Colors.black.withOpacity(0.5),
+                                  Colors.black.withOpacity(0.4),
+                                  Colors.black.withOpacity(0.1),
+                                  // Colors.black.withOpacity(0.05),
+                                  // Colors.black.withOpacity(0.025),
+                                ])),
+                        child: Center(
+                          child: CustomText(
+                            text: catagoryProvider.catagories[index].name,
+                            color: Colors.white,
+                            size: 24,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
+                    ),
                   ),
-                  
+
                   // Padding(
                   //padding: const EdgeInsets.fromLTRB(30, 20, 8, 40),
                   //  child:

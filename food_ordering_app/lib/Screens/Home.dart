@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:food_ordering_app/Helpers/screen_navigation.dart';
 import 'package:food_ordering_app/Screens/loginScreen.dart';
+import 'package:food_ordering_app/Screens/products_searched.dart';
+import 'package:food_ordering_app/Screens/rastaurant_searched.dart';
 import 'package:food_ordering_app/Screens/shoppingBag.dart';
+import 'package:food_ordering_app/providers/app.dart';
+import 'package:food_ordering_app/providers/product.dart';
 import 'package:food_ordering_app/providers/rastaurant.dart';
 import 'package:food_ordering_app/providers/user.dart';
 import 'package:food_ordering_app/widgets/BottomNavBar.dart';
+import 'package:food_ordering_app/widgets/Loading.dart';
 import 'package:food_ordering_app/widgets/catagories.dart';
 import 'package:food_ordering_app/widgets/custom_widgets.dart';
 import 'package:food_ordering_app/widgets/featured_products.dart';
@@ -14,6 +19,7 @@ import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
   int active = 2;
+
   @override
   _HomeState createState() => _HomeState();
 }
@@ -30,7 +36,8 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context);
     final rastaurantProvider = Provider.of<RastaurantProvider>(context);
-
+    final app = Provider.of<AppProvider>(context);
+    final productProvider = Provider.of<ProductProvider>(context);
     return Scaffold(
       drawer: Drawer(
         child: ListView(
@@ -165,7 +172,16 @@ class _HomeState extends State<Home> {
       ),
       bottomNavigationBar: BottomNavBar(active: 2),
       backgroundColor: Colors.white,
-      body: SafeArea(
+      body:
+          // app.isloading
+          //     ? Container(
+          //         child: Column(
+          //           mainAxisAlignment: MainAxisAlignment.center,
+          //           children: [Loading()],
+          //         ),
+          //       )
+          //     :
+          SafeArea(
         child: ListView(
           children: [
             Container(
@@ -187,11 +203,17 @@ class _HomeState extends State<Home> {
                       Icons.search,
                       color: Colors.red,
                     ),
-                    trailing: Icon(
-                      Icons.filter_list,
-                      color: Colors.red,
-                    ),
                     title: TextField(
+                      textInputAction: TextInputAction.search,
+                      onSubmitted: (pattern) async {
+                        if (app.search == SearchBy.PRODUCTS) {
+                          await productProvider.search(proname: pattern);
+                          ChangeScreen(context, ProductSearchScreen());
+                        } else {
+                          await rastaurantProvider.search(rasname: pattern);
+                          ChangeScreen(context, RastaurantSearchScreen());
+                        }
+                      },
                       decoration: InputDecoration(
                           hintText: "Find foods and Restaurants",
                           border: InputBorder.none),
@@ -199,6 +221,38 @@ class _HomeState extends State<Home> {
                   ),
                 ),
               ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                CustomText(
+                  text: "Search by:",
+                  color: Colors.grey,
+                  fontWeight: FontWeight.w300,
+                ),
+                DropdownButton<String>(
+                  value: app.filterBy,
+                  style:
+                      TextStyle(color: Colors.red, fontWeight: FontWeight.w300),
+                  icon: Icon(
+                    Icons.filter_list,
+                    color: Colors.red,
+                  ),
+                  elevation: 0,
+                  onChanged: (value) {
+                    if (value == "Products") {
+                      app.changeSearchby(searchby: SearchBy.PRODUCTS);
+                    } else {
+                      app.changeSearchby(searchby: SearchBy.RASTAURANTS);
+                    }
+                  },
+                  items: <String>["Products", "Restaurants"]
+                      .map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                        value: value, child: Text(value));
+                  }).toList(),
+                ),
+              ],
             ),
             SizedBox(
               height: 20,

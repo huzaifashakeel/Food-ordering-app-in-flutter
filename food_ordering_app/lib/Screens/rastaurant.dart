@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:food_ordering_app/Helpers/screen_navigation.dart';
 import 'package:food_ordering_app/Models/rastaurant.dart';
 import 'package:food_ordering_app/providers/product.dart';
 import 'package:food_ordering_app/widgets/Loading.dart';
 import 'package:food_ordering_app/widgets/custom_widgets.dart';
+import 'package:food_ordering_app/widgets/productwidget.dart';
 import 'package:food_ordering_app/widgets/smallButton.dart';
 import 'package:provider/provider.dart';
 import 'package:transparent_image/transparent_image.dart';
@@ -17,6 +19,7 @@ class RestaurantScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final productProvider = Provider.of<ProductProvider>(context);
+    // print(restaurantModel);
 
     return Scaffold(
       body: SafeArea(
@@ -39,7 +42,7 @@ class RestaurantScreen extends StatelessWidget {
                 child: FadeInImage.memoryNetwork(
                   placeholder: kTransparentImage,
                   image: restaurantModel.image,
-                  height: 160,
+                  height: 200,
                   fit: BoxFit.fill,
                   width: double.infinity,
                 ),
@@ -176,22 +179,22 @@ class RestaurantScreen extends StatelessWidget {
           ),
 
           // products
-          // Column(
-          //   children: productProvider.productsByRestaurant
-          //       .map((item) => GestureDetector(
-          //             onTap: () {
-          //               changeScreen(
-          //                   context,
-          //                   Details(
-          //                     product: item,
-          //                   ));
-          //             },
-          //             child: ProductWidget(
-          //               product: item,
-          //             ),
-          //           ))
-          //       .toList(),
-          // )
+          Column(
+            children: productProvider.productsbyRastaurants
+                .map((item) => GestureDetector(
+                      onTap: () {
+                        ChangeScreen(
+                            context,
+                            Details(
+                              product: item,
+                            ));
+                      },
+                      child: ProductWidget(
+                        product: item,
+                      ),
+                    ))
+                .toList(),
+          )
         ],
       )),
     );
